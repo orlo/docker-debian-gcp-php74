@@ -1,16 +1,11 @@
 # docker build --build-arg http_proxy=http://192.168.0.66:3128 --build-arg https_proxy=http://192.168.0.66:3128 .
-FROM debian:buster
+FROM debian:buster-slim as base
 
 ENV LC_ALL C.UTF-8
 ARG DEBIAN_FRONTEND=noninteractive
 ARG http_proxy=""
 ARG https_proxy=""
 
-# http://pecl.php.net/package/grpc
-ENV GRPC_VERSION 1.33.1
-
-# http://pecl.php.net/package/protobuf
-ENV PROTOBUF_VERSION 3.13.0.1
 RUN echo "force-unsafe-io" > /etc/dpkg/dpkg.cfg.d/force-unsafe-io && \
     apt-get -q update && \
     apt-get install -y eatmydata  && \
@@ -27,24 +22,9 @@ RUN apt-get -qq update && \
         git-core \
         netcat \
         jq \
-        php7.4 php7.4-cli php7.4-curl php7.4-json php7.4-xml php7.4-mysql php7.4-mbstring php7.4-bcmath php7.4-zip php7.4-mysql php7.4-dev php7.4-sqlite3 php7.4-opcache php7.4-xml php7.4-xsl php7.4-intl php7.4-xdebug \
-        zip unzip \
-        zlib1g-dev libprotobuf-dev && \
-    rm -f /etc/php/*/*/conf.d/*xdebug* && \
-    mkdir /tmp/build && cd /tmp/build && curl -so pecl.tgz https://pecl.php.net/get/grpc-${GRPC_VERSION}.tgz && tar --no-same-owner -zxf pecl.tgz && cd grpc-${GRPC_VERSION} && \
-    phpize . && autoreconf --force --install && \
-    ./configure && \
-    eatmydata -- make && \
-    make install && cd /tmp/build && rm pecl.tgz && \
-    cd /tmp/build && curl -so pecl.tgz https://pecl.php.net/get/protobuf-${PROTOBUF_VERSION}.tgz && tar --no-same-owner -zxf pecl.tgz && cd protobuf-${PROTOBUF_VERSION} && \
-    phpize . && autoreconf --force --install && \
-    ./configure && \
-    eatmydata -- make && make install && \
-    cd /tmp && rm -Rf /tmp/build && \
-    apt-get remove -y --purge php7.4-dev zlib1g-dev libprotobuf-dev && \
-    eatmydata -- apt-get -y autoremove && \
+        php7.4 php7.4-cli php7.4-curl php7.4-json php7.4-xml php7.4-mysql php7.4-mbstring php7.4-bcmath php7.4-zip php7.4-mysql php7.4-sqlite3 php7.4-opcache php7.4-xml php7.4-xsl php7.4-intl php7.4-apcu php7.4-grpc php7.4-protobuf zip unzip && \
     apt-get clean && \
-    rm -Rf /var/lib/apt/lists/* && \
+    rm -Rf /var/lib/apt/libs/* && \
     a2enmod headers rewrite deflate php7.4
 
 COPY ./provisioning/php.ini /etc/php/7.4/apache2/conf.d/local.ini
