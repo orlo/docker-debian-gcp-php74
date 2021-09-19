@@ -24,7 +24,7 @@ RUN apt-get -qq update && \
         jq \
         php7.4 php7.4-cli php7.4-curl php7.4-json php7.4-xml php7.4-mysql php7.4-mbstring php7.4-bcmath php7.4-zip php7.4-mysql php7.4-sqlite3 php7.4-opcache php7.4-xml php7.4-xsl php7.4-intl php7.4-apcu php7.4-grpc php7.4-protobuf zip unzip && \
     apt-get clean && \
-    rm -Rf /var/lib/apt/libs/* && \
+    rm -Rf /var/lib/apt/lists/* && \
     a2enmod headers rewrite deflate php7.4
 
 COPY ./provisioning/php.ini /etc/php/7.4/apache2/conf.d/local.ini
