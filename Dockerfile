@@ -31,7 +31,7 @@ RUN apt-get -qq update && \
 COPY ./provisioning/php.ini /etc/php/7.4/apache2/conf.d/local.ini
 COPY ./provisioning/php.ini /etc/php/7.4/cli/conf.d/local.ini
 
-RUN curl -so /usr/local/bin/composer https://getcomposer.org/download/2.3.7/composer.phar && chmod 755 /usr/local/bin/composer
+RUN curl -so /usr/local/bin/composer https://getcomposer.org/download/2.4.4/composer.phar && chmod 755 /usr/local/bin/composer
 
 RUN echo GMT > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata \
     && mkdir -p "/var/log/apache2" \
