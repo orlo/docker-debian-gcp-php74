@@ -26,18 +26,18 @@ RUN apt-get -qq update && \
     apt-get clean && \
     rm -Rf /var/lib/apt/lists/* && \
     update-alternatives --set php /usr/bin/php7.4 && \
+    rm /etc/apache2/conf-enabled/other-vhosts-access-log.conf /etc/apache2/conf-enabled/serve-cgi-bin.conf && \
     a2enmod headers rewrite deflate php7.4
 
 COPY ./provisioning/php.ini /etc/php/7.4/apache2/conf.d/local.ini
 COPY ./provisioning/php.ini /etc/php/7.4/cli/conf.d/local.ini
 
-RUN curl -so /usr/local/bin/composer https://getcomposer.org/download/2.4.4/composer.phar && chmod 755 /usr/local/bin/composer
+RUN curl -so /usr/local/bin/composer https://getcomposer.org/download/2.5.2/composer.phar && chmod 755 /usr/local/bin/composer
 
 RUN echo GMT > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata \
     && mkdir -p "/var/log/apache2" \
     && ln -sfT /dev/stderr "/var/log/apache2/error.log" \
-    && ln -sfT /dev/stdout "/var/log/apache2/access.log" \
-    && ln -sfT /dev/stdout "/var/log/apache2/other_vhosts_access.log"
+    && ln -sfT /dev/stdout "/var/log/apache2/access.log" 
 
 CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
 EXPOSE 80
