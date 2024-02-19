@@ -2,9 +2,7 @@
 
 ## Features 
 
- * PHP 7.4 via deb.sury.org
- * PHP GRPC module
- * PHP Protobuf module
+ * PHP 7.4 via deb.sury.org with GRPC module
  * Apache mod\_php
  
 See also: https://hub.docker.com/r/socialsigninapp/docker-debian-gcp-php74/
@@ -27,5 +25,4 @@ docker build \
 
 ## Todo
 
- * Add checksum checking on the downloaded pecl tgz files.
  * Link better to Debian/Debsury.org so we rebuild on change of those files
