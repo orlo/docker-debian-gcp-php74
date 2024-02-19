@@ -13,7 +13,7 @@ RUN echo "force-unsafe-io" > /etc/dpkg/dpkg.cfg.d/force-unsafe-io && \
     apt-get clean && rm -Rf /var/lib/apt/lists/*
 
 COPY ./provisioning/sources.list /etc/apt/sources.list
-COPY ./provisioning/debsury.gpg /etc/apt/trusted.gpg.d/debsury.gpg
+COPY ./provisioning/debsury.gpg /usr/share/keyrings/deb.sury.org-php.gpg
 
 RUN apt-get -qq update && \
     eatmydata -- apt-get -qy install \
@@ -32,7 +32,7 @@ RUN apt-get -qq update && \
 COPY ./provisioning/php.ini /etc/php/7.4/apache2/conf.d/local.ini
 COPY ./provisioning/php.ini /etc/php/7.4/cli/conf.d/local.ini
 
-RUN curl -so /usr/local/bin/composer https://getcomposer.org/download/2.5.2/composer.phar && chmod 755 /usr/local/bin/composer
+RUN curl -so /usr/local/bin/composer https://getcomposer.org/download/2.7.1/composer.phar && chmod 755 /usr/local/bin/composer
 
 RUN echo GMT > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata \
     && mkdir -p "/var/log/apache2" \
