@@ -1,6 +1,8 @@
 # docker build --build-arg http_proxy=http://192.168.0.66:3128 --build-arg https_proxy=http://192.168.0.66:3128 .
 FROM debian:buster-slim as base
 
+ARG COMPOSER_SHA256="1ffd0be3f27e237b1ae47f9e8f29f96ac7f50a0bd9eef4f88cdbe94dd04bfff0"
+
 ENV LC_ALL C.UTF-8
 ARG DEBIAN_FRONTEND=noninteractive
 ARG http_proxy=""
@@ -33,6 +35,9 @@ COPY ./provisioning/php.ini /etc/php/7.4/apache2/conf.d/local.ini
 COPY ./provisioning/php.ini /etc/php/7.4/cli/conf.d/local.ini
 
 RUN curl -so /usr/local/bin/composer https://getcomposer.org/download/2.7.1/composer.phar && chmod 755 /usr/local/bin/composer
+
+# 0844c3dd85bbfa039d33fbda58ae65a38a9f615fcba76948aed75bf94d7606ca  /usr/local/bin/composer
+RUN echo "${COMPOSER_SHA256}  /usr/local/bin/composer" | sha256sum --check
 
 RUN echo GMT > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata \
     && mkdir -p "/var/log/apache2" \
